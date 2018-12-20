@@ -1,6 +1,7 @@
 import numpy
 from numpy.random import random_integers as rand
 import matplotlib.pyplot as pyplot
+import matplotlib.animation as animation
 
 def maze(width=81, height=51, complexity=.75, density=.75):
     # Only odd shapes
@@ -33,7 +34,18 @@ def maze(width=81, height=51, complexity=.75, density=.75):
     Z[5,5] = 5.5
     return Z
 
-pyplot.figure(figsize=(10, 5))
-pyplot.imshow(maze(80, 40), cmap=pyplot.cm.gist_yarg, interpolation='nearest')
-pyplot.xticks([]), pyplot.yticks([])
+fig = pyplot.figure(figsize=(10, 5))
+tmp = maze(80, 40)
+im = pyplot.imshow(tmp, cmap=pyplot.cm.gist_yarg, interpolation='nearest')
+
+def updatefig (frame):
+    print(frame)
+    if frame > 0 and frame < 80:
+        tmp[frame,1] = 5.5
+    im.set_array(tmp)
+    return im,
+
+ani = animation.FuncAnimation(fig, updatefig, interval=50, blit=True)
+
+#pyplot.xticks([]), pyplot.yticks([])
 pyplot.show()
