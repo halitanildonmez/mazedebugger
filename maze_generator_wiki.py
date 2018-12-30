@@ -32,6 +32,7 @@ def maze(width=81, height=51, complexity=.75, density=.75):
                     x, y = x_, y_
 
     Z[5,5] = 5.5
+    
     return Z
 
 fig = pyplot.figure(figsize=(10, 5))
@@ -45,7 +46,33 @@ def updatefig (frame):
     im.set_array(tmp)
     return im,
 
-ani = animation.FuncAnimation(fig, updatefig, interval=50, blit=True)
+
+def dfs (frame):
+    global g_x
+    global g_y
+    # up
+    if g_x > 0:
+        g_x -= 1
+    elif g_x < 40:
+        g_x += 1
+    
+    if g_y > 0:
+        g_y = g_y - 1
+    elif g_y < 80:
+        g_y = g_y + 1    
+    
+    print(g_x, g_y, tmp[g_x, g_y])
+    
+    if tmp[g_x, g_y] == 0:
+        tmp[g_x, g_y] = 5.5
+    
+    im.set_array(tmp)
+    return im,
+    
+g_x = 5
+g_y = 5
+
+ani = animation.FuncAnimation(fig, dfs, interval=50, blit=True)
 
 #pyplot.xticks([]), pyplot.yticks([])
 pyplot.show()
