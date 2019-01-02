@@ -52,13 +52,13 @@ def dfs (frame):
 
     value = 0.6
     
-    print(g_x, g_y, original[g_x, g_y])
+    print(g_x, g_y, original[g_x, g_y], tmp[g_x, g_y])
     
     # up
     up_x_f = lambda: g_x - 1 if g_x > 0 else -1 
     up_x = up_x_f()
     up_y = g_y
-    if (up_x >= 0) and (original[up_x, up_y] > 0) and (tmp[up_x, up_y] != value):
+    if (up_x >= 0) and (original[up_x, up_y] == 0) and (tmp[up_x, up_y] != value):
         tmp[up_x, up_y] = value
         g_x = up_x
         im.set_array(tmp)
@@ -69,7 +69,7 @@ def dfs (frame):
     down_x_f = lambda: g_x + 1 if g_x < 80 else -1
     down_x = down_x_f()
     down_y = g_y
-    if (down_x >= 0) and (original[down_x, down_y] > 0) and (tmp[down_x, down_y] != value):
+    if (down_x >= 0) and (original[down_x, down_y] == 0) and (tmp[down_x, down_y] != value):
         tmp[down_x, down_y] = value
         g_x = down_x
         im.set_array(tmp)
@@ -80,7 +80,7 @@ def dfs (frame):
     left_x = g_x
     left_y_f = lambda: g_y - 1 if g_y > 0 else -1
     left_y = left_y_f()
-    if (left_y >= 0) and (original[left_x, left_y] > 0) and (tmp[left_x, left_y] != value):
+    if (left_y >= 0) and (original[left_x, left_y] == 0) and (tmp[left_x, left_y] != value):
         tmp[left_x, left_y] = value
         g_y = left_y
         im.set_array(tmp)
@@ -91,7 +91,7 @@ def dfs (frame):
     right_x = g_x
     right_y_f = lambda: g_y - 1 if g_y > 0 else -1
     right_y = right_y_f()
-    if (right_y >= 0) and (original[right_x, right_y] > 0) and (tmp[right_x, right_y] != value):
+    if (right_y >= 0) and (original[right_x, right_y] == 0) and (tmp[right_x, right_y] != value):
         tmp[right_x, right_y] = value
         g_y = right_y
         im.set_array(tmp)
@@ -99,7 +99,7 @@ def dfs (frame):
         return im,
     
     im.set_array(tmp)
-    print("none")
+    print("none", original[up_x, up_y], original[down_x, down_y], original[left_x, left_y], original[right_x, right_y])
     return im,
     
 g_x = 5
