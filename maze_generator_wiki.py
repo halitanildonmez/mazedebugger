@@ -10,7 +10,7 @@ def maze(width=81, height=51, complexity=.75, density=.75):
     complexity = int(complexity * (5 * (shape[0] + shape[1]))) # number of components
     density    = int(density * ((shape[0] // 2) * (shape[1] // 2))) # size of components
     # Build actual maze
-    Z = numpy.zeros(shape, dtype=numpy.int8)
+    Z = numpy.zeros(shape, dtype=numpy.float)
     # Fill borders
     Z[0, :] = Z[-1, :] = 1
     Z[:, 0] = Z[:, -1] = 1
@@ -29,15 +29,14 @@ def maze(width=81, height=51, complexity=.75, density=.75):
                 if Z[y_, x_] == 0:
                     Z[y_, x_] = 1
                     Z[y_ + (y - y_) // 2, x_ + (x - x_) // 2] = 1
-                    x, y = x_, y_
-
-    Z[5,5] = 5.5
-    
+                    x, y = x_, y_    
     return Z
 
 fig = pyplot.figure(figsize=(10, 5))
 tmp = maze(80, 40)
-im = pyplot.imshow(tmp, cmap=pyplot.cm.gist_yarg, interpolation='nearest')
+original = tmp
+im = pyplot.imshow(tmp, cmap=pyplot.cm.gist_yarg) # , cmap=pyplot.cm.gist_yarg, interpolation='nearest'
+pyplot.colorbar()
 
 def updatefig (frame):
     print(frame)
@@ -46,27 +45,61 @@ def updatefig (frame):
     im.set_array(tmp)
     return im,
 
-
 def dfs (frame):
     global g_x
     global g_y
+    global original
+
+    value = 0.6
+    
+    print(g_x, g_y, original[g_x, g_y])
+    
     # up
-    if g_x > 0:
-        g_x -= 1
-    elif g_x < 40:
-        g_x += 1
+    up_x_f = lambda: g_x - 1 if g_x > 0 else -1 
+    up_x = up_x_f()
+    up_y = g_y
+    if (up_x >= 0) and (original[up_x, up_y] > 0) and (tmp[up_x, up_y] != value):
+        tmp[up_x, up_y] = value
+        g_x = up_x
+        im.set_array(tmp)
+        print("up")
+        return im,
     
-    if g_y > 0:
-        g_y = g_y - 1
-    elif g_y < 80:
-        g_y = g_y + 1    
+    # down
+    down_x_f = lambda: g_x + 1 if g_x < 80 else -1
+    down_x = down_x_f()
+    down_y = g_y
+    if (down_x >= 0) and (original[down_x, down_y] > 0) and (tmp[down_x, down_y] != value):
+        tmp[down_x, down_y] = value
+        g_x = down_x
+        im.set_array(tmp)
+        print("down")
+        return im,
     
-    print(g_x, g_y, tmp[g_x, g_y])
+    # left
+    left_x = g_x
+    left_y_f = lambda: g_y - 1 if g_y > 0 else -1
+    left_y = left_y_f()
+    if (left_y >= 0) and (original[left_x, left_y] > 0) and (tmp[left_x, left_y] != value):
+        tmp[left_x, left_y] = value
+        g_y = left_y
+        im.set_array(tmp)
+        print("left")
+        return im,
     
-    if tmp[g_x, g_y] == 0:
-        tmp[g_x, g_y] = 5.5
+    # right
+    right_x = g_x
+    right_y_f = lambda: g_y - 1 if g_y > 0 else -1
+    right_y = right_y_f()
+    if (right_y >= 0) and (original[right_x, right_y] > 0) and (tmp[right_x, right_y] != value):
+        tmp[right_x, right_y] = value
+        g_y = right_y
+        im.set_array(tmp)
+        print("right")
+        return im,
     
     im.set_array(tmp)
+    print("none")
     return im,
     
 g_x = 5
