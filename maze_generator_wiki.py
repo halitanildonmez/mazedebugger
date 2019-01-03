@@ -3,6 +3,11 @@ from numpy.random import random_integers as rand
 import matplotlib.pyplot as pyplot
 import matplotlib.animation as animation
 
+class MazeCoords:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
 def maze(width=81, height=51, complexity=.75, density=.75):
     # Only odd shapes
     shape = ((height // 2) * 2 + 1, (width // 2) * 2 + 1)
@@ -46,13 +51,20 @@ def updatefig (frame):
     return im,
 
 def dfs (frame):
-    global g_x
-    global g_y
     global original
+    global stack
 
-    value = 0.6
+    if not stack:
+        print("list is empty")
+        return im,
     
-    print(g_x, g_y, original[g_x, g_y], tmp[g_x, g_y])
+    value = 0.6
+
+    last_val = stack.pop()
+    g_x = last_val.x
+    g_y = last_val.y
+    
+    print(len(stack), g_x, g_y, original[g_x, g_y], tmp[g_x, g_y])
     
     # up
     up_x_f = lambda: g_x - 1 if g_x > 0 else -1 
@@ -60,10 +72,11 @@ def dfs (frame):
     up_y = g_y
     if (up_x >= 0) and (original[up_x, up_y] == 0) and (tmp[up_x, up_y] != value):
         tmp[up_x, up_y] = value
-        g_x = up_x
-        im.set_array(tmp)
+        #g_x = up_x
+        #im.set_array(tmp)
         print("up")
-        return im,
+        stack.append(MazeCoords(up_x, up_y))
+        #return im,
     
     # down
     down_x_f = lambda: g_x + 1 if g_x < 80 else -1
@@ -71,10 +84,11 @@ def dfs (frame):
     down_y = g_y
     if (down_x >= 0) and (original[down_x, down_y] == 0) and (tmp[down_x, down_y] != value):
         tmp[down_x, down_y] = value
-        g_x = down_x
-        im.set_array(tmp)
+        #g_x = down_x
+        #im.set_array(tmp)
         print("down")
-        return im,
+        stack.append(MazeCoords(down_x, down_y))
+        #return im,
     
     # left
     left_x = g_x
@@ -82,10 +96,11 @@ def dfs (frame):
     left_y = left_y_f()
     if (left_y >= 0) and (original[left_x, left_y] == 0) and (tmp[left_x, left_y] != value):
         tmp[left_x, left_y] = value
-        g_y = left_y
-        im.set_array(tmp)
+        #g_y = left_y
+        #im.set_array(tmp)
         print("left")
-        return im,
+        stack.append(MazeCoords(left_x, left_y))
+        #return im,
     
     # right
     right_x = g_x
@@ -93,17 +108,20 @@ def dfs (frame):
     right_y = right_y_f()
     if (right_y >= 0) and (original[right_x, right_y] == 0) and (tmp[right_x, right_y] != value):
         tmp[right_x, right_y] = value
-        g_y = right_y
-        im.set_array(tmp)
+        #g_y = right_y
+        #im.set_array(tmp)
         print("right")
-        return im,
-    
+        stack.append(MazeCoords(right_x, right_y))
+        #return im,
+
+    #tmp[g_x, g_y] = value
     im.set_array(tmp)
-    print("none", original[up_x, up_y], original[down_x, down_y], original[left_x, left_y], original[right_x, right_y])
+    print("none", len(stack), up_x, up_y, down_x, down_y, left_x, left_y, right_x, right_y)
     return im,
     
 g_x = 5
 g_y = 5
+stack = [MazeCoords(5,5)]
 
 ani = animation.FuncAnimation(fig, dfs, interval=50, blit=True)
 
