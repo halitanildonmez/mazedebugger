@@ -53,7 +53,7 @@ def updatefig (frame):
 def dfs (frame):
     global original
     global stack
-
+    
     if not stack:
         print("list is empty")
         return im,
@@ -64,7 +64,7 @@ def dfs (frame):
     g_x = last_val.x
     g_y = last_val.y
     
-    print(len(stack), g_x, g_y, original[g_x, g_y], tmp[g_x, g_y])
+    print(g_x, g_y, original[g_x, g_y], tmp[g_x, g_y])
     
     # up
     up_x_f = lambda: g_x - 1 if g_x > 0 else -1 
@@ -104,7 +104,7 @@ def dfs (frame):
     
     # right
     right_x = g_x
-    right_y_f = lambda: g_y - 1 if g_y > 0 else -1
+    right_y_f = lambda: g_y + 1 if g_y < 80 else -1
     right_y = right_y_f()
     if (right_y >= 0) and (original[right_x, right_y] == 0) and (tmp[right_x, right_y] != value):
         tmp[right_x, right_y] = value
@@ -116,7 +116,7 @@ def dfs (frame):
 
     #tmp[g_x, g_y] = value
     im.set_array(tmp)
-    print("none", len(stack), up_x, up_y, down_x, down_y, left_x, left_y, right_x, right_y)
+    print(g_x, g_y, "none", len(stack), up_x, up_y, down_x, down_y, left_x, left_y, right_x, right_y)
     return im,
     
 g_x = 5
